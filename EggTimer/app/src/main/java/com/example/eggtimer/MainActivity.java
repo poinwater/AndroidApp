@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         }
         countBtn.setText("stop");
         long milliseconds = timeSeekBar.getProgress() * 1000;
-        eggTimer = new CountDownTimer(milliseconds, 1000){
+        eggTimer = new CountDownTimer(milliseconds, 1000 + 100){
             @Override
             public void onTick(long millisUntilFinished) {
                 String minute = String.format("%02d", (millisUntilFinished/ 1000) / 60);
