@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Egg Timer</string>
+    <string name="_00_00">00 : 00</string>
+</resources>
