@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final ArrayList<String> friends = new ArrayList<String>(asList("Kim", "Spencer", "Li Silong", "Lemon"));
-        
+
         ListView myListView = (ListView) findViewById(R.id.myListView);
 
         ArrayAdapter<String> myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, friends);
