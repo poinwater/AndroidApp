@@ -51,11 +51,14 @@ public class MainActivity extends AppCompatActivity {
         Button countBtn = findViewById(R.id.countBtn);
         MediaPlayer md = MediaPlayer.create(getApplicationContext(), R.raw.bell);
 
+        // eggTimer is activate
         if (eggTimer != null && countBtn.getText() == "stop"){
             eggTimer.cancel();
             countBtn.setText("start");
+            timeSeekBar.setEnabled(true);
             return;
         }
+
         countBtn.setText("stop");
         long milliseconds = timeSeekBar.getProgress() * 1000;
         eggTimer = new CountDownTimer(milliseconds, 1000 + 100){
@@ -70,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 md.start();
                 countBtn.setText("start");
+                timeSeekBar.setEnabled(true);
 
             }
 
@@ -77,5 +81,6 @@ public class MainActivity extends AppCompatActivity {
         };
 
         eggTimer.start();
+        timeSeekBar.setEnabled(false);
     };
 }
