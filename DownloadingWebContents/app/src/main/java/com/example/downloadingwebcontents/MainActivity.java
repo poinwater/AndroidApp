@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         String result = "";
         try{
             DownloadTask task = new DownloadTask();
-            result = task.execute("https://my.cityu.edu/").get();
+            result = task.execute("http://www.zappycode.com").get();
 
         }catch(Exception e){
             e.printStackTrace();
