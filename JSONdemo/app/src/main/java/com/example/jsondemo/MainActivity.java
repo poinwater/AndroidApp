@@ -6,6 +6,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -49,7 +53,26 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            Log.i("JSON", s);
+            try {
+//                JSONObject jsonObject = new JSONObject(s);
+//
+//                String titleInfo = jsonObject.getString("title");
+//
+//                Log.i("title", titleInfo);
+
+                JSONArray arr = new JSONArray(s);
+
+                for (int i=0; i<arr.length(); i++) {
+
+                    JSONObject jsonPart = arr.getJSONObject(i);
+
+                    Log.i("id", jsonPart.getString("id"));
+                    Log.i("completed", jsonPart.getString("completed"));
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
     @Override
@@ -58,6 +81,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         DownloadTask task = new DownloadTask();
-        task.execute("https://jsonplaceholder.typicode.com/todos/1");
+        task.execute("https://jsonplaceholder.typicode.com/todos");
     }
 }
