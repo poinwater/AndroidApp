@@ -33,12 +33,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
 
@@ -74,10 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 md.start();
                 countBtn.setText("start");
                 timeSeekBar.setEnabled(true);
-
             }
-
-
         };
 
         eggTimer.start();
