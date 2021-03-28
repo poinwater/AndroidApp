@@ -24,9 +24,13 @@ public class textEditor extends AppCompatActivity {
         intent = getIntent();
 
         position = intent.getIntExtra("position", -1);
+
         if (position != -1 ) {
             content = MainActivity.notes.get(position);
             textEditor.setText(content);
+        } else {
+            MainActivity.notes.add("");
+            position = MainActivity.notes.size() - 1;
         }
 
 
@@ -40,6 +44,7 @@ public class textEditor extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 MainActivity.notes.set(position, String.valueOf(s));
                 MainActivity.adapter.notifyDataSetChanged();
+                MainActivity.saveNote(getApplicationContext(), "notes");
             }
 
             @Override

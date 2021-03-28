@@ -43,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
         if (item.getItemId() == R.id.addNote) {
-            Log.i("menu", "Add Note");
+            Intent new_intent = new Intent(getBaseContext(), textEditor.class);
+            startActivity(new_intent);
             return true;
         }
         return false;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         noteListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getBaseContext(), textEditor.class);
+
 
                 new AlertDialog.Builder(getApplicationContext())
                         .setTitle("Delete note")
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    protected void saveNote(Context mContext, String filename) {
+    static public void saveNote(Context mContext, String filename) {
         try {
             FileOutputStream fos = mContext.openFileOutput(filename + ".dat", mContext.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
