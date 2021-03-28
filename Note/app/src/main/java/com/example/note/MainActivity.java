@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -77,9 +78,19 @@ public class MainActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
 
-                new AlertDialog.Builder(getApplicationContext())
+                new AlertDialog.Builder(MainActivity.this)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle("Delete note")
                         .setMessage("Do you want to delete the note?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                notes.remove(position);
+                                adapter.notifyDataSetChanged();
+                                saveNote(getApplicationContext(),"notes");
+                            }
+                        })
+                        .setNegativeButton("No", null)
                         .show();
                 return true;
             }
