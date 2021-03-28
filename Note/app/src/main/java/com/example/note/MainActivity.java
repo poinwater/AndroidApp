@@ -1,9 +1,11 @@
 package com.example.note;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -21,12 +23,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     ListView noteListView;
     ArrayAdapter<String> adapter;
-    String[] notes;
+    ArrayList<String> notes;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -50,34 +53,52 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        notes = readNote(getApplicationContext(), "notes");
 
-        updateNote(1, "Test2");
+        notes = readNote(getApplicationContext(), "notes");
         noteListView = findViewById(R.id.noteListView);
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, notes);
+
         noteListView.setAdapter(adapter);
+
+        noteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getBaseContext(), textEditor.class);
+                intent.putExtra("content", notes.get(position));
+                intent.putExtra("position", position);
+                startActivity(intent);
+            }
+        });
 
         noteListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("Long Click", String.valueOf(position));
+                Intent intent = new Intent(getBaseContext(), textEditor.class);
+
+                new AlertDialog.Builder(getApplicationContext())
+                        .setTitle("Delete note")
+                        .setMessage("Do you want to delete the note?")
+                        .show();
                 return true;
             }
         });
 
     }
 
+    public void getEditedText() {
+        Intent intent = getIntent();
+        String content = intent.getStringExtra("content");
+        int position = intent.getIntExtra("position", 0);
+        if (content != null) {
+            updateNote(position, content);
+        }
+    }
+
     public void updateNote(int position, String text) {
-        String[] newNotes;
-        if (position >= notes.length) {
-            newNotes = new String[notes.length + 1];
-            for (int i=0; i<notes.length; i++) {
-                newNotes[i] = notes[i];
-            }
-            newNotes[notes.length] = text;
-            notes = newNotes;
+        if (position < notes.size()) {
+            notes.set(position, text);
         } else {
-            notes[position] = text;
+            notes.add(text);
         }
         saveNote(getApplicationContext(), "notes");
 
@@ -94,16 +115,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    protected String[] readNote(Context mContext, String filename) {
+    protected ArrayList<String> readNote(Context mContext, String filename) {
         try {
             FileInputStream fis = mContext.openFileInput(filename + ".dat");
             ObjectInputStream ois = new ObjectInputStream(fis);
-            String[] obj = (String[]) ois.readObject();
+            ArrayList<String> obj = (ArrayList<String>) ois.readObject();
             ois.close();
             return obj;
         } catch (Exception e) {
             e.printStackTrace();
-            return new String[0];
+            return new ArrayList<String>();
         }
     }
 }
