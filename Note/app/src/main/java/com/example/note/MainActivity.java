@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -50,11 +52,19 @@ public class MainActivity extends AppCompatActivity {
 
         notes = readNote(getApplicationContext(), "notes");
 
-        updateNote(1, "Test1");
+        updateNote(1, "Test2");
         noteListView = findViewById(R.id.noteListView);
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, notes);
-
         noteListView.setAdapter(adapter);
+
+        noteListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.i("Long Click", String.valueOf(position));
+                return true;
+            }
+        });
+
     }
 
     public void updateNote(int position, String text) {
@@ -66,16 +76,15 @@ public class MainActivity extends AppCompatActivity {
             }
             newNotes[notes.length] = text;
             notes = newNotes;
+        } else {
+            notes[position] = text;
         }
-        try{
-            saveNote(getApplicationContext(), "notes");
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        saveNote(getApplicationContext(), "notes");
+
     }
+
     protected void saveNote(Context mContext, String filename) {
         try {
-            Log.i("save", "Note Saved!");
             FileOutputStream fos = mContext.openFileOutput(filename + ".dat", mContext.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(notes);
@@ -87,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
 
     protected String[] readNote(Context mContext, String filename) {
         try {
-            Log.i("read", "Note Read!");
             FileInputStream fis = mContext.openFileInput(filename + ".dat");
             ObjectInputStream ois = new ObjectInputStream(fis);
             String[] obj = (String[]) ois.readObject();
