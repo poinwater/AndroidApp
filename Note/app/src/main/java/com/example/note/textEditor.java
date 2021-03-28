@@ -11,7 +11,7 @@ import android.widget.EditText;
 
 public class textEditor extends AppCompatActivity {
     EditText textEditor;
-    String content;
+    String content = "";
     Intent intent;
     int position;
 
@@ -23,17 +23,13 @@ public class textEditor extends AppCompatActivity {
         textEditor = findViewById(R.id.textEditor);
         intent = getIntent();
 
-        content = intent.getStringExtra("content");
         position = intent.getIntExtra("position", -1);
-
-        if (position == -1 || content == null) {
-            position = 0;
-            content = "";
+        if (position != -1 ) {
+            content = MainActivity.notes.get(position);
+            textEditor.setText(content);
         }
 
-        Log.i("received", content);
 
-        textEditor.setText(content);
         textEditor.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -42,13 +38,13 @@ public class textEditor extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                MainActivity.notes.set(position, String.valueOf(s));
+                MainActivity.adapter.notifyDataSetChanged();
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                content = textEditor.getText().toString();
-                getIntent().putExtra("content", content);
+
             }
         });
 

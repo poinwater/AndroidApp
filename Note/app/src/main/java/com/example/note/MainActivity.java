@@ -28,8 +28,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     ListView noteListView;
-    ArrayAdapter<String> adapter;
-    ArrayList<String> notes;
+    static ArrayAdapter<String> adapter;
+    static ArrayList<String> notes;
+    Intent intent;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -57,14 +58,14 @@ public class MainActivity extends AppCompatActivity {
         notes = readNote(getApplicationContext(), "notes");
         noteListView = findViewById(R.id.noteListView);
         adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, notes);
+        intent = new Intent(getBaseContext(), textEditor.class);
 
         noteListView.setAdapter(adapter);
 
         noteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getBaseContext(), textEditor.class);
-                intent.putExtra("content", notes.get(position));
+
                 intent.putExtra("position", position);
                 startActivity(intent);
             }
