@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
 
-        player = new MediaPlayer();
+        player = MediaPlayer.create(this, R.raw.voice);
         Path = getExternalCacheDir().getAbsolutePath();
 
 
@@ -72,8 +72,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClick(View v){
 
-        tag = v.getTag().toString();
+        player.start();
+        int tag = Integer.parseInt(v.getTag().toString());
         Intent intent = new Intent(getBaseContext(), Recording.class);
+        intent.putExtra("index", tag);
         startActivity(intent);
 
 

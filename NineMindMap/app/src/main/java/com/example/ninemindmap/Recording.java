@@ -70,7 +70,11 @@ public class Recording extends AppCompatActivity {
     }
 
     private void startRecording() {
+        player = MediaPlayer.create(this, R.raw.recording_start);
         recorder = new MediaRecorder();
+
+        player.start();
+        player = null;
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
         recorder.setOutputFile(fileName);
@@ -81,11 +85,19 @@ public class Recording extends AppCompatActivity {
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed");
         }
-
+        try {
+            Thread.sleep(1500);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         recorder.start();
     }
 
     private void stopRecording() {
+        player = MediaPlayer.create(this, R.raw.recording_end);
+        player.start();
+        player = null;
+
         recorder.stop();
         recorder.release();
         recorder = null;
@@ -150,14 +162,14 @@ public class Recording extends AppCompatActivity {
         recordButton = new RecordButton(this);
         ll.addView(recordButton,
                 new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
                         1));
         playButton = new PlayButton(this);
         ll.addView(playButton,
                 new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
                         1));
         setContentView(ll);
     }
