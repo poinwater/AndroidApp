@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -20,13 +21,14 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String LOG_TAG = "AudioRecordTest";
+    private static final String LOG_TAG = "Recording";
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+    protected static String Path;
+    protected static String tag;
 
 
-
-    private MediaRecorder recorder = null;
-    private MediaPlayer   player = null;
+    protected static MediaRecorder recorder = null;
+    protected static MediaPlayer   player = null;
 
     // Requesting permission to RECORD_AUDIO
     private boolean permissionToRecordAccepted = false;
@@ -51,16 +53,35 @@ public class MainActivity extends AppCompatActivity {
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
 
+        player = new MediaPlayer();
+        Path = getExternalCacheDir().getAbsolutePath();
+
+
     }
 
 
+    public static void createRecorder(String newFileName) {
+
+        recorder = new MediaRecorder();
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        recorder.setOutputFile(Path + "/" + newFileName);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+    }
 
     public void onClick(View v){
-        PlayTag(v);
+
+        tag = v.getTag().toString();
+        Intent intent = new Intent(getBaseContext(), Recording.class);
+        startActivity(intent);
+
+
     }
 
-    public void PlayTag(View v) {
-        String tag = v.getTag().toString();
-        Log.i("tag", tag);
+
+
+    public static void PlayText(String text) {
+        Log.i("tag", text);
     }
 }
