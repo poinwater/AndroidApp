@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.LinearLayout;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -77,8 +79,9 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public boolean stopRecording (String fileName, boolean isRecording) {
-        if (recorder == null) {
+    public boolean stopRecording () {
+        if (recorder != null) {
+            recorder.stop();
             recorder.release();
             recorder = null;
         }
@@ -99,6 +102,17 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View v){
 
         Log.i("test", "single click" + v.getTag().toString());
+        String FileName = v.getTag().toString() + ".3gp";
+
+        recording_player = new MediaPlayer();
+        try {
+            recording_player.setDataSource(Path + "/" + prefix + FileName);
+            recording_player.prepare();
+            recording_player.start();
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+
 
     }
 
@@ -127,16 +141,25 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("test", "long click" + Btn.getText().toString());
                 String FileName = Btn.getText().toString() + ".3gp";
 
-                if (isRecording) {
-                    isRecording = stopRecording(FileName, isRecording);
-                    audio_player = MediaPlayer.create(Btn.getContext(), R.raw.recording_end);
-                    audio_player.start();
-                    return false;
-                }
-                isRecording = startRecording(FileName, isRecording);
+
                 audio_player = MediaPlayer.create(Btn.getContext(), R.raw.recording_start);
                 audio_player.start();
+                try { Thread.sleep(1500); } catch (Exception e) { e.printStackTrace(); };
+                isRecording = startRecording(FileName, isRecording);
+
+
+                new CountDownTimer(60000, 1000) {
+
+                    public void onTick(long millisUntilFinished) {
+                    }
+                    public void onFinish() {
+                        isRecording = stopRecording();
+                        audio_player = MediaPlayer.create(Btn.getContext(), R.raw.recording_end);
+                        audio_player.start();
+                    }
+                }.start();
                 return true;
+
             }
         });
     }
